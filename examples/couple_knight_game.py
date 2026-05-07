@@ -119,7 +119,7 @@ def play_level(raw_level: list[str], level_index: int) -> bool:
         )
         print(message)
 
-        if rescued and has_key:
+        if rescued:
             print(f"第 {level_index + 1} 关完成，你成功救到陈晓凡！")
             return True
 
