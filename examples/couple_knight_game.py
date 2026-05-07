@@ -5,7 +5,7 @@ WALL = "#"
 EMPTY = "."
 TRAP = "^"
 KEY = "K"
-PRINCESS = "P"
+CHEN_XIAOFAN = "P"
 KNIGHT = "@"
 
 
@@ -55,14 +55,6 @@ def parse_level(raw_level: list[str]) -> tuple[list[list[str]], Position]:
     raise ValueError("关卡中缺少骑士起点。")
 
 
-def find_cell(grid: list[list[str]], target: str) -> Position | None:
-    for r, row in enumerate(grid):
-        for c, cell in enumerate(row):
-            if cell == target:
-                return Position(r, c)
-    return None
-
-
 def draw(grid: list[list[str]], level_index: int, has_key: bool) -> None:
     print(f"\n=== 第 {level_index + 1} 关 ===")
     print("你是程子阳，目标是闯关救出陈晓凡！")
@@ -78,30 +70,33 @@ def move(
     dr: int,
     dc: int,
     has_key: bool,
-) -> tuple[Position, bool, str]:
+) -> tuple[Position, bool, str, bool]:
     nr, nc = knight.row + dr, knight.col + dc
     target = grid[nr][nc]
     if target == WALL:
-        return knight, has_key, "撞墙了，换个方向！"
+        return knight, has_key, "撞墙了，换个方向！", False
 
     if target == TRAP:
-        return knight, has_key, "踩到陷阱，原地停住！"
+        return knight, has_key, "踩到陷阱，原地停住！", False
 
     if target == KEY:
         has_key = True
 
-    if target == PRINCESS and not has_key:
-        return knight, has_key, "陈晓凡前有魔法封印，先去拿钥匙！"
+    if target == CHEN_XIAOFAN and not has_key:
+        return knight, has_key, "陈晓凡前有魔法封印，先去拿钥匙！", False
+
+    if target == CHEN_XIAOFAN and has_key:
+        grid[knight.row][knight.col] = EMPTY
+        return Position(nr, nc), has_key, "你抵达了陈晓凡身边！", True
 
     grid[knight.row][knight.col] = EMPTY
     grid[nr][nc] = KNIGHT
-    return Position(nr, nc), has_key, "前进成功！"
+    return Position(nr, nc), has_key, "前进成功！", False
 
 
 def play_level(raw_level: list[str], level_index: int) -> bool:
     grid, knight = parse_level(raw_level)
     has_key = False
-    princess_pos = find_cell(grid, PRINCESS)
 
     while True:
         draw(grid, level_index, has_key)
@@ -119,10 +114,12 @@ def play_level(raw_level: list[str], level_index: int) -> bool:
             print("无效操作，请输入 W/A/S/D/Q。")
             continue
 
-        knight, has_key, message = move(grid, knight, direction[0], direction[1], has_key)
+        knight, has_key, message, rescued = move(
+            grid, knight, direction[0], direction[1], has_key
+        )
         print(message)
 
-        if princess_pos and knight.row == princess_pos.row and knight.col == princess_pos.col:
+        if rescued and has_key:
             print(f"第 {level_index + 1} 关完成，你成功救到陈晓凡！")
             return True
 
