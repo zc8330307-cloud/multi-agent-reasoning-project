@@ -1,4 +1,4 @@
-from examples.couple_knight_game import CHEN_XIAOFAN, KNIGHT, WALL, move
+from examples.couple_knight_game import CHEN_XIAOFAN, KEY, KNIGHT, TRAP, WALL, move
 from examples.couple_knight_game import Position
 
 
@@ -48,3 +48,35 @@ def test_can_rescue_with_key():
     assert has_key is True
     assert rescued is True
     assert "抵达了陈晓凡身边" in message
+
+
+def test_pick_up_key_updates_state():
+    grid = [
+        [WALL, WALL, WALL],
+        [WALL, KNIGHT, KEY],
+        [WALL, WALL, WALL],
+    ]
+    knight = Position(1, 1)
+
+    new_pos, has_key, message, rescued = move(grid, knight, 0, 1, False)
+
+    assert new_pos == Position(1, 2)
+    assert has_key is True
+    assert rescued is False
+    assert "前进成功" in message
+
+
+def test_trap_keeps_knight_in_place():
+    grid = [
+        [WALL, WALL, WALL],
+        [WALL, KNIGHT, TRAP],
+        [WALL, WALL, WALL],
+    ]
+    knight = Position(1, 1)
+
+    new_pos, has_key, message, rescued = move(grid, knight, 0, 1, False)
+
+    assert new_pos == knight
+    assert has_key is False
+    assert rescued is False
+    assert "踩到陷阱" in message
