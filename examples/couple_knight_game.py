@@ -82,10 +82,9 @@ def move(
     if target == KEY:
         has_key = True
 
-    if target == CHEN_XIAOFAN and not has_key:
-        return knight, has_key, "陈晓凡前有魔法封印，先去拿钥匙！", False
-
-    if target == CHEN_XIAOFAN and has_key:
+    if target == CHEN_XIAOFAN:
+        if not has_key:
+            return knight, has_key, "陈晓凡前有魔法封印，先去拿钥匙！", False
         grid[knight.row][knight.col] = EMPTY
         return Position(nr, nc), has_key, "你抵达了陈晓凡身边！", True
 
