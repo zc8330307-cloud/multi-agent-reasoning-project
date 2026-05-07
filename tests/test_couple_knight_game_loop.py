@@ -32,3 +32,14 @@ def test_main_prints_success_when_all_levels_pass(monkeypatch, capsys):
 
     output = capsys.readouterr().out
     assert "恭喜通关" in output
+
+
+def test_play_level_handles_invalid_command_then_continue(monkeypatch, capsys):
+    commands = iter(["x", "q"])
+    monkeypatch.setattr("builtins.input", lambda _prompt: next(commands))
+
+    result = game.play_level(game.LEVELS[0], 0)
+
+    output = capsys.readouterr().out
+    assert result is False
+    assert "无效操作" in output
