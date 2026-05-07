@@ -46,6 +46,19 @@ python -m multi_agent_system.main --task "帮我分析一个 Python 项目，生
 
 运行后会在 `runs/` 文件夹生成 Markdown 格式的工作流日志。
 
+## 情侣小游戏示例（骑士救援）
+
+仓库中提供了一个可直接运行的命令行小游戏：程子阳控制骑士闯关，拯救陈晓凡。
+
+```bash
+python examples/couple_knight_game.py
+```
+
+玩法说明：
+- 使用 `W/A/S/D` 控制移动
+- `#` 是墙，`^` 是陷阱
+- 第 3 关需要先拿到钥匙 `K` 才能救出陈晓凡 `P`
+
 ## 示例输出内容
 
 系统会输出并保存以下内容：
